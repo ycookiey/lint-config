@@ -1,0 +1,157 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oxc-project/oxc/main/npm/oxlint/configuration_schema.json",
+  "plugins": [
+    "react",
+    "react-perf",
+    "nextjs",
+    "typescript",
+    "import",
+    "jsx-a11y",
+    "unicorn",
+    "oxc",
+    "jsdoc",
+    "jest",
+    "vitest",
+    "promise",
+    "node"
+  ],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn",
+    "pedantic": "warn",
+    "style": "warn",
+    "perf": "warn",
+    "restriction": "off",
+    "nursery": "off"
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "es2024": true
+  },
+  "ignorePatterns": [
+    "node_modules",
+    "dist",
+    "build",
+    ".next",
+    "coverage",
+    "**/*.d.ts"
+  ],
+  "rules": {
+    "no-console": ["warn", { "allow": ["warn", "error"] }],
+    "no-debugger": "error",
+    "no-alert": "error",
+    "eqeqeq": "error",
+    "no-var": "error",
+    "prefer-const": "error",
+    "prefer-template": "error",
+    "arrow-body-style": ["error", "as-needed"],
+    "object-shorthand": "error",
+    "no-useless-rename": "error",
+    "yoda": "error",
+    "no-shadow": "error",
+    "no-implicit-coercion": "error",
+    "no-throw-literal": "error",
+    "default-case": "error",
+    "prefer-arrow-callback": "error",
+    "no-param-reassign": "error",
+    "prefer-spread": "error",
+    "no-loop-func": "error",
+    "no-empty-function": "error",
+    "sort-keys": "off",
+    "sort-imports": "off",
+    "sort-vars": "off",
+    "max-params": ["error", { "max": 4 }],
+    "max-depth": ["error", { "max": 4 }],
+    "max-nested-callbacks": ["error", { "max": 3 }],
+    "max-lines-per-function": ["error", { "max": 80, "skipBlankLines": true, "skipComments": true }],
+    "complexity": ["error", { "max": 12 }],
+    "max-lines": ["error", { "max": 300, "skipBlankLines": true, "skipComments": true }],
+    "no-restricted-globals": ["error", "event", "name", "length"],
+    "require-await": "error",
+    "no-async-promise-executor": "error",
+    "no-await-in-loop": "warn",
+
+    "typescript/no-explicit-any": "error",
+    "typescript/consistent-type-imports": "error",
+    "typescript/no-non-null-assertion": "error",
+    "typescript/no-floating-promises": "error",
+    "typescript/explicit-module-boundary-types": "off",
+    "typescript/no-unused-vars": [
+      "warn",
+      { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }
+    ],
+    "typescript/array-type": ["error", { "default": "array" }],
+    "typescript/consistent-type-definitions": ["error", "type"],
+    "typescript/ban-ts-comment": "error",
+    "typescript/no-empty-interface": "error",
+    "typescript/no-useless-constructor": "error",
+    "typescript/no-magic-numbers": "off",
+
+    "react/react-in-jsx-scope": "off",
+    "react/self-closing-comp": "error",
+    "react/no-array-index-key": "error",
+    "react/jsx-curly-brace-presence": ["error", { "props": "never", "children": "never" }],
+    "react/jsx-boolean-value": ["error", "never"],
+    "react/jsx-fragments": ["error", "syntax"],
+    "react/jsx-no-useless-fragment": "error",
+
+    "react-hooks/exhaustive-deps": "error",
+
+    "nextjs/no-html-link-for-pages": "error",
+    "nextjs/no-img-element": "error",
+    "nextjs/no-sync-scripts": "error",
+
+    "import/no-default-export": "error",
+    "import/no-duplicates": "error",
+    "import/first": "error",
+    "import/newline-after-import": "error",
+    "import/no-cycle": "error",
+    "import/no-self-import": "error",
+
+    "promise/always-return": "error",
+    "promise/catch-or-return": "error",
+    "promise/no-nesting": "warn",
+
+    "unicorn/filename-case": "off",
+    "unicorn/no-null": "off",
+    "unicorn/no-array-reduce": "off",
+    "unicorn/prefer-node-protocol": "error",
+    "unicorn/throw-new-error": "error",
+    "unicorn/no-useless-undefined": "warn",
+    "unicorn/prefer-string-replace-all": "error",
+
+    "jest/expect-expect": "error",
+    "jest/no-disabled-tests": "warn",
+    "jest/no-focused-tests": "error",
+
+    "vitest/expect-expect": "error",
+    "vitest/no-disabled-tests": "warn",
+    "vitest/no-focused-tests": "error"
+  },
+  "overrides": [
+    {
+      "files": ["src/pages/**/*.tsx", "src/app/**/*.tsx", "*.stories.tsx"],
+      "rules": {
+        "import/no-default-export": "off",
+        "max-lines": "off"
+      }
+    },
+    {
+      "files": [
+        "**/*.test.{ts,tsx,js,jsx}",
+        "**/*.spec.{ts,tsx,js,jsx}",
+        "**/__tests__/**/*.{ts,tsx,js,jsx}"
+      ],
+      "env": {
+        "jest": true
+      },
+      "rules": {
+        "max-lines": "off",
+        "complexity": "off",
+        "typescript/no-magic-numbers": "off",
+        "import/no-default-export": "off"
+      }
+    }
+  ]
+}
