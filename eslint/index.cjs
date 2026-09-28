@@ -1,8 +1,16 @@
 const tsParser = require("@typescript-eslint/parser");
 const tsPlugin = require("@typescript-eslint/eslint-plugin");
-const reactPlugin = require("eslint-plugin-react");
+const reactHooksPlugin = require("eslint-plugin-react-hooks");
 const simpleImportSort = require("eslint-plugin-simple-import-sort");
 
+// Base config (v1.1.0 以降): naming-convention のような型情報要求 rule は
+// `./eslint-strict` で opt-in 提供。ここではプロジェクト導入時の摩擦が
+// 少ない rule のみ default で error。
+// v2.0.0: hooks は eslint-plugin-react-hooks v7 の recommended をそのまま使う
+// (React Compiler 由来の検査を含む公式実装)。oxlint 側の同名 rule は off に
+// して二重指摘を避ける。コンポーネントをアロー関数で書く規則は oxlint の
+// react/function-component-definition に移した (eslint-plugin-react は
+// ESLint 10 と同時に install できない)。
 module.exports = [
   {
     files: ["**/*.{ts,tsx,js,jsx,mjs,cjs}"],
@@ -16,49 +24,37 @@ module.exports = [
     },
     plugins: {
       "@typescript-eslint": tsPlugin,
-      react: reactPlugin,
+      "react-hooks": reactHooksPlugin,
       "simple-import-sort": simpleImportSort,
     },
-    settings: {
-      react: { version: "detect" },
-    },
     rules: {
-      "@typescript-eslint/naming-convention": [
-        "error",
-        {
-          selector: "variable",
-          format: ["camelCase", "UPPER_CASE", "PascalCase"],
-        },
-        {
-          selector: "variable",
-          types: ["boolean"],
-          format: ["PascalCase"],
-          prefix: ["is", "should", "has", "can", "did", "will"],
-        },
-        { selector: "typeLike", format: ["PascalCase"] },
-        {
-          selector: "interface",
-          format: ["PascalCase"],
-          custom: { regex: "^I[A-Z]", match: false },
-        },
-        { selector: "enumMember", format: ["UPPER_CASE"] },
-      ],
       "simple-import-sort/imports": "error",
       "simple-import-sort/exports": "error",
-      "react/function-component-definition": [
-        "error",
-        { namedComponents: "arrow-function" },
-      ],
+      ...reactHooksPlugin.configs.recommended.rules,
       "@typescript-eslint/no-magic-numbers": [
         "error",
         {
-          ignore: [-1, 0, 1],
+          ignore: [-1, 0, 1, 2, 100, 1000],
           ignoreArrayIndexes: true,
+          ignoreDefaultValues: true,
+          ignoreClassFieldInitialValues: true,
           enforceConst: true,
           ignoreEnums: true,
           ignoreNumericLiteralTypes: true,
         },
       ],
+    },
+  },
+  // test override: テストファイルでは magic number を許容 (oxlint preset と同方針)。
+  // テストは expected 値や fixture 数字を多用するため、命名強制は逆に可読性を損なう。
+  {
+    files: [
+      "**/*.test.{ts,tsx,js,jsx}",
+      "**/*.spec.{ts,tsx,js,jsx}",
+      "**/__tests__/**/*.{ts,tsx,js,jsx}",
+    ],
+    rules: {
+      "@typescript-eslint/no-magic-numbers": "off",
     },
   },
 ];

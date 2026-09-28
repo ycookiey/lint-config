@@ -9,6 +9,6 @@
     "noEmit": true,
     "resolveJsonModule": true
   },
-  "include": ["eslint/**/*.cjs", "eslint.config.cjs"],
+  "include": ["eslint/**/*.cjs", "eslint-strict/**/*.cjs", "eslint.config.cjs"],
   "exclude": ["node_modules"]
 }

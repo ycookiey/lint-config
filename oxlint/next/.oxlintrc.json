@@ -1,0 +1,23 @@
+{
+  "$schema": "https://raw.githubusercontent.com/oxc-project/oxc/main/npm/oxlint/configuration_schema.json",
+  "plugins": ["nextjs"],
+  "rules": {
+    "nextjs/no-html-link-for-pages": "error",
+    "nextjs/no-img-element": "error",
+    "nextjs/no-sync-scripts": "error"
+  },
+  "overrides": [
+    {
+      "files": [
+        "app/**/*.{ts,tsx}",
+        "src/app/**/*.{ts,tsx}",
+        "pages/**/*.{ts,tsx}",
+        "src/pages/**/*.{ts,tsx}"
+      ],
+      "rules": {
+        "import/no-default-export": "off",
+        "max-lines": "off"
+      }
+    }
+  ]
+}

@@ -2,15 +2,12 @@
   "$schema": "https://raw.githubusercontent.com/oxc-project/oxc/main/npm/oxlint/configuration_schema.json",
   "plugins": [
     "react",
-    "react-perf",
-    "nextjs",
     "typescript",
     "import",
     "jsx-a11y",
     "unicorn",
     "oxc",
     "jsdoc",
-    "jest",
     "vitest",
     "promise",
     "node"
@@ -18,8 +15,8 @@
   "categories": {
     "correctness": "error",
     "suspicious": "warn",
-    "pedantic": "warn",
-    "style": "warn",
+    "pedantic": "off",
+    "style": "off",
     "perf": "warn",
     "restriction": "off",
     "nursery": "off"
@@ -95,12 +92,21 @@
     "react/jsx-boolean-value": ["error", "never"],
     "react/jsx-fragments": ["error", "syntax"],
     "react/jsx-no-useless-fragment": "error",
+    "react/function-component-definition": ["error", { "namedComponents": "arrow-function", "unnamedComponents": "arrow-function" }],
 
-    "react-hooks/exhaustive-deps": "error",
-
-    "nextjs/no-html-link-for-pages": "error",
-    "nextjs/no-img-element": "error",
-    "nextjs/no-sync-scripts": "error",
+    "react/rules-of-hooks": "off",
+    "react/exhaustive-deps": "off",
+    "react/static-components": "off",
+    "react/use-memo": "off",
+    "react/preserve-manual-memoization": "off",
+    "react/immutability": "off",
+    "react/globals": "off",
+    "react/refs": "off",
+    "react/set-state-in-effect": "off",
+    "react/set-state-in-render": "off",
+    "react/error-boundaries": "off",
+    "react/purity": "off",
+    "react/unsupported-syntax": "off",
 
     "import/no-default-export": "error",
     "import/no-duplicates": "error",
@@ -108,6 +114,7 @@
     "import/newline-after-import": "error",
     "import/no-cycle": "error",
     "import/no-self-import": "error",
+    "import/no-unassigned-import": ["warn", { "allow": ["**/*.css", "@fontsource*/**"] }],
 
     "promise/always-return": "error",
     "promise/catch-or-return": "error",
@@ -121,20 +128,22 @@
     "unicorn/no-useless-undefined": "warn",
     "unicorn/prefer-string-replace-all": "error",
 
-    "jest/expect-expect": "error",
-    "jest/no-disabled-tests": "warn",
-    "jest/no-focused-tests": "error",
-
     "vitest/expect-expect": "error",
     "vitest/no-disabled-tests": "warn",
     "vitest/no-focused-tests": "error"
   },
   "overrides": [
     {
-      "files": ["src/pages/**/*.tsx", "src/app/**/*.tsx", "*.stories.tsx"],
+      "files": ["*.stories.tsx", "**/*.stories.tsx"],
       "rules": {
         "import/no-default-export": "off",
         "max-lines": "off"
+      }
+    },
+    {
+      "files": ["*.config.{ts,js,mjs,cjs}", "**/*.config.{ts,js,mjs,cjs}"],
+      "rules": {
+        "import/no-default-export": "off"
       }
     },
     {
@@ -144,7 +153,7 @@
         "**/__tests__/**/*.{ts,tsx,js,jsx}"
       ],
       "env": {
-        "jest": true
+        "vitest": true
       },
       "rules": {
         "max-lines": "off",
