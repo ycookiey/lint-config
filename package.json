@@ -1,6 +1,6 @@
 {
   "name": "@ycookiey/lint-config",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "oxlint (main) + ESLint (supplement) shared config. TypeScript, React. Next.js 用は ./oxlint/next を追加で読み込む。",
   "license": "MIT",
   "keywords": [
@@ -31,8 +31,7 @@
       "default": "./eslint/index.cjs"
     },
     "./eslint-strict": {
-      "require": "./eslint-strict/index.cjs",
-      "default": "./eslint-strict/index.cjs"
+      "default": "./eslint-strict/index.js"
     }
   },
   "files": [
@@ -42,12 +41,16 @@
     "README.md",
     "LICENSE"
   ],
+  "engines": {
+    "node": ">=22.13.0"
+  },
   "peerDependencies": {
     "oxlint": ">=1.85.0",
     "eslint": ">=10",
     "typescript": ">=5"
   },
   "dependencies": {
+    "@eslint-react/eslint-plugin": "5.23.3",
     "@typescript-eslint/eslint-plugin": "^8.70.1",
     "@typescript-eslint/parser": "^8.70.1",
     "eslint-plugin-react-hooks": "^7.1.1",
@@ -61,7 +64,8 @@
   "scripts": {
     "lint": "npm run lint:oxlint && npm run lint:eslint",
     "lint:oxlint": "oxlint",
-    "lint:eslint": "eslint ."
+    "lint:eslint": "eslint .",
+    "test": "node --test \"test/**/*.test.js\""
   },
   "publishConfig": {
     "access": "public"
