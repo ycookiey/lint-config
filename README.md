@@ -1,14 +1,14 @@
 # lint-config
 
-`@ycookiey/lint-config` — oxlint をメインに、ESLint で補完するための共有設定。
+`@ycookiey/lint-config` — a shared lint config for TypeScript and React that uses oxlint as the main linter and ESLint for the rules oxlint does not have.
 
-## install
+## Install
 
 ```sh
 npm i -D @ycookiey/lint-config oxlint eslint typescript
 ```
 
-oxlint 1.85 以上、ESLint 10 以上が必要。
+Requires oxlint 1.85 or later, ESLint 10 or later, and Node.js 22.13 or later.
 
 ## oxlint
 
@@ -17,13 +17,16 @@ oxlint 1.85 以上、ESLint 10 以上が必要。
 ```json
 {
   "$schema": "https://raw.githubusercontent.com/oxc-project/oxc/main/npm/oxlint/configuration_schema.json",
-  "extends": ["./node_modules/@ycookiey/lint-config/oxlint/.oxlintrc.json"]
+  "extends": ["./node_modules/@ycookiey/lint-config/oxlint/.oxlintrc.json"],
+  "ignorePatterns": ["**/*.d.ts"]
 }
 ```
 
+oxlint's `extends` does not carry over the `ignorePatterns` of the extended config (checked with oxlint 1.85). To keep this config's ignore patterns, such as `**/*.d.ts`, repeat them in your own config.
+
 ### Next.js
 
-追加設定も extends する:
+Also extend the Next.js config:
 
 ```json
 {
@@ -36,24 +39,40 @@ oxlint 1.85 以上、ESLint 10 以上が必要。
 
 ## ESLint
 
-`eslint.config.mjs` (Flat Config):
+`eslint.config.mjs` (flat config):
 
 ```js
 import lintConfig from '@ycookiey/lint-config/eslint';
 export default [
   ...lintConfig,
-  // 必要に応じてプロジェクト固有 override
+  // your project's overrides
 ];
 ```
 
-### Strict 版 (opt-in)
+In test files (`*.test.*`, `*.spec.*`, and files under `__tests__/`, `test-utils/` and `tests/`), the function passed to `it` / `test` is limited to 80 lines, not counting blank lines and comment-only lines (`@ycookiey/max-test-case-lines`). The length of a `describe` is not limited.
 
-型情報要求の `@typescript-eslint/naming-convention` (boolean prefix 強制等) を有効化したい場合:
+### Strict config (opt-in)
+
+The base config plus rules that need type information. It is an ES module, so load it with `import`. When loaded with `require` from CommonJS, the config is in `.default`.
 
 ```js
 import lintConfig from '@ycookiey/lint-config/eslint-strict';
 export default [
   ...lintConfig,
-  // parserOptions.project の設定が別途必要 (monorepo 等では重い)
+  {
+    languageOptions: {
+      parserOptions: { projectService: true, tsconfigRootDir: import.meta.dirname },
+    },
+  },
 ];
 ```
+
+Rules it adds:
+
+| rule | what it checks |
+|---|---|
+| `@typescript-eslint/naming-convention` | boolean variables start with `is` / `should` / `has` / `can` / `did` / `will`, interfaces have no `I` prefix, and more |
+| `@typescript-eslint/switch-exhaustiveness-check` | a `switch` over a union handles every member; a `switch` over a non-union type has a `default` (`requireDefaultForNonUnion`) |
+| `@typescript-eslint/no-floating-promises` | every Promise is awaited or has its rejection handled |
+| `@typescript-eslint/promise-function-async` | a function that returns a Promise is `async`, so it always reports failure as a rejection |
+| `@eslint-react/no-leaked-conditional-rendering` | the left side of `&&` in JSX cannot render a stray value such as `0` (judged from types; booleans are not reported) |

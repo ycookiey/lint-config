@@ -2,15 +2,24 @@ const tsParser = require("@typescript-eslint/parser");
 const tsPlugin = require("@typescript-eslint/eslint-plugin");
 const reactHooksPlugin = require("eslint-plugin-react-hooks");
 const simpleImportSort = require("eslint-plugin-simple-import-sort");
+const ownPlugin = require("./plugin/index.cjs");
 
-// Base config (v1.1.0 以降): naming-convention のような型情報要求 rule は
-// `./eslint-strict` で opt-in 提供。ここではプロジェクト導入時の摩擦が
-// 少ない rule のみ default で error。
-// v2.0.0: hooks は eslint-plugin-react-hooks v7 の recommended をそのまま使う
-// (React Compiler 由来の検査を含む公式実装)。oxlint 側の同名 rule は off に
-// して二重指摘を避ける。コンポーネントをアロー関数で書く規則は oxlint の
-// react/function-component-definition に移した (eslint-plugin-react は
-// ESLint 10 と同時に install できない)。
+const TEST_FILES = [
+  "**/*.test.{ts,tsx,js,jsx}",
+  "**/*.spec.{ts,tsx,js,jsx}",
+  "**/__tests__/**/*.{ts,tsx,js,jsx}",
+  "**/test-utils/**/*.{ts,tsx,js,jsx}",
+  "**/tests/**/*.{ts,tsx,js,jsx}",
+];
+
+// Base config: only rules that work without type information, so a project
+// can adopt it without setting up a TypeScript project. Rules that need type
+// information are in `./eslint-strict`.
+// Hooks use eslint-plugin-react-hooks' recommended rules as they are (they
+// include the React Compiler checks); oxlint's rules of the same names are off
+// so that a finding is not reported twice. eslint-plugin-react is not used,
+// since it cannot be installed with ESLint 10; components are checked by
+// oxlint's react rules instead.
 module.exports = [
   {
     files: ["**/*.{ts,tsx,js,jsx,mjs,cjs}"],
@@ -26,6 +35,7 @@ module.exports = [
       "@typescript-eslint": tsPlugin,
       "react-hooks": reactHooksPlugin,
       "simple-import-sort": simpleImportSort,
+      "@ycookiey": ownPlugin,
     },
     rules: {
       "simple-import-sort/imports": "error",
@@ -45,16 +55,19 @@ module.exports = [
       ],
     },
   },
-  // test override: テストファイルでは magic number を許容 (oxlint preset と同方針)。
-  // テストは expected 値や fixture 数字を多用するため、命名強制は逆に可読性を損なう。
+  // Test files allow magic numbers, as the oxlint config does: giving every
+  // expected value and fixture number a named constant makes tests harder to
+  // read. oxlint's max-lines-per-function is off for test files because it
+  // also measures `describe`; max-test-case-lines limits only the function
+  // given to `it` / `test`.
   {
-    files: [
-      "**/*.test.{ts,tsx,js,jsx}",
-      "**/*.spec.{ts,tsx,js,jsx}",
-      "**/__tests__/**/*.{ts,tsx,js,jsx}",
-    ],
+    files: TEST_FILES,
     rules: {
       "@typescript-eslint/no-magic-numbers": "off",
+      "@ycookiey/max-test-case-lines": [
+        "error",
+        { max: 80, skipBlankLines: true, skipComments: true },
+      ],
     },
   },
 ];

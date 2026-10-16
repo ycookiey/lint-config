@@ -49,7 +49,7 @@
     "no-shadow": "error",
     "no-implicit-coercion": "error",
     "no-throw-literal": "error",
-    "default-case": "error",
+    "default-case": "off",
     "prefer-arrow-callback": "error",
     "no-param-reassign": "error",
     "prefer-spread": "error",
@@ -65,14 +65,22 @@
     "complexity": ["error", { "max": 12 }],
     "max-lines": ["error", { "max": 300, "skipBlankLines": true, "skipComments": true }],
     "no-restricted-globals": ["error", "event", "name", "length"],
-    "require-await": "error",
+    "require-await": "off",
     "no-async-promise-executor": "error",
     "no-await-in-loop": "warn",
+
+    "no-array-constructor": "error",
+    "no-case-declarations": "error",
+    "no-empty": "error",
+    "no-fallthrough": "error",
+    "no-inner-declarations": "error",
+    "no-prototype-builtins": "error",
+    "no-regex-spaces": "error",
+    "prefer-rest-params": "error",
 
     "typescript/no-explicit-any": "error",
     "typescript/consistent-type-imports": "error",
     "typescript/no-non-null-assertion": "error",
-    "typescript/no-floating-promises": "error",
     "typescript/explicit-module-boundary-types": "off",
     "typescript/no-unused-vars": [
       "warn",
@@ -84,8 +92,16 @@
     "typescript/no-empty-interface": "error",
     "typescript/no-useless-constructor": "error",
     "typescript/no-magic-numbers": "off",
+    "typescript/no-empty-object-type": "error",
+    "typescript/no-namespace": "error",
+    "typescript/no-require-imports": "error",
+    "typescript/no-unsafe-function-type": "error",
 
     "react/react-in-jsx-scope": "off",
+    "react/display-name": "error",
+    "react/jsx-no-target-blank": "error",
+    "react/no-unescaped-entities": "error",
+    "react/no-unknown-property": "error",
     "react/self-closing-comp": "error",
     "react/no-array-index-key": "error",
     "react/jsx-curly-brace-presence": ["error", { "props": "never", "children": "never" }],
@@ -107,6 +123,8 @@
     "react/error-boundaries": "off",
     "react/purity": "off",
     "react/unsupported-syntax": "off",
+    "react/memo-dependencies": "off",
+    "react/exhaustive-effect-dependencies": "off",
 
     "import/no-default-export": "error",
     "import/no-duplicates": "error",
@@ -128,6 +146,8 @@
     "unicorn/no-useless-undefined": "warn",
     "unicorn/prefer-string-replace-all": "error",
 
+    "oxc/no-map-spread": "off",
+
     "vitest/expect-expect": "error",
     "vitest/no-disabled-tests": "warn",
     "vitest/no-focused-tests": "error"
@@ -147,16 +167,26 @@
       }
     },
     {
+      "files": ["*.cjs", "**/*.cjs"],
+      "rules": {
+        "typescript/no-require-imports": "off"
+      }
+    },
+    {
       "files": [
         "**/*.test.{ts,tsx,js,jsx}",
         "**/*.spec.{ts,tsx,js,jsx}",
-        "**/__tests__/**/*.{ts,tsx,js,jsx}"
+        "**/__tests__/**/*.{ts,tsx,js,jsx}",
+        "**/test-utils/**/*.{ts,tsx,js,jsx}",
+        "**/tests/**/*.{ts,tsx,js,jsx}"
       ],
       "env": {
         "vitest": true
       },
       "rules": {
         "max-lines": "off",
+        "max-lines-per-function": "off",
+        "max-nested-callbacks": ["error", { "max": 4 }],
         "complexity": "off",
         "typescript/no-magic-numbers": "off",
         "import/no-default-export": "off"
