@@ -76,19 +76,3 @@ export default [
 | `@typescript-eslint/no-floating-promises` | `await` も `catch` もしない Promise を禁止 |
 | `@typescript-eslint/promise-function-async` | Promise を返す関数は `async` にする (失敗を必ず reject で返す) |
 | `@eslint-react/no-leaked-conditional-rendering` | `&&` の左側が数などで、画面に `0` などが漏れうる条件付き表示を禁止 (型情報で判定。boolean は指摘しない) |
-
-## 3.0.0 の変更点
-
-型情報を使う検査を Strict 版に寄せ、test で目的と食い違っていた制限を直した。指摘が増えるので major にした。
-
-- Strict 版を ES module にした (`@eslint-react/eslint-plugin` が ES module のみのため)。Node.js 22.13 以上が必要
-- oxlint の `default-case` を off にし、Strict 版の `switch-exhaustiveness-check` で見る。union の switch に `default` を足させると、union に値が増えたときに型で気づけなくなる
-- oxlint の `typescript/no-floating-promises` を外し、Strict 版で見る。oxlint の同名 rule は `--type-aware` なしでは動かない
-- oxlint の `require-await` を off にし、Strict 版の `promise-function-async` で見る。`require-await` は Promise を返す約束の関数から `async` を外させ、同期の例外を許す向きに働く。`await` の付け忘れは `no-floating-promises` が見る
-- Strict 版に `@eslint-react/no-leaked-conditional-rendering` を足した (`eslint-plugin-react` が ESLint 10 に対応せず外れた `react/jsx-no-leaked-render` の代わり)
-- oxlint で、eslint:recommended などの推奨設定にあった次の rule を有効にした: `no-array-constructor`・`no-case-declarations`・`no-empty`・`no-fallthrough`・`no-inner-declarations`・`no-prototype-builtins`・`no-regex-spaces`・`prefer-rest-params`・`typescript/no-empty-object-type`・`typescript/no-namespace`・`typescript/no-require-imports` (`*.cjs` では off)・`typescript/no-unsafe-function-type`・`react/display-name`・`react/jsx-no-target-blank`・`react/no-unescaped-entities`・`react/no-unknown-property`
-- oxlint の `react/memo-dependencies`・`react/exhaustive-effect-dependencies` を off にした。ESLint の `react-hooks/exhaustive-deps` と同じものを見て、二重に指摘していた
-- oxlint の `oxc/no-map-spread` を off にした。この rule は `map` の中で `...` を使って項目を足す書き方を指摘し、元の object を書き換える直し方 (`Object.assign`・`push`) を勧める。元を書き換えない書き方 (React の state など) とぶつかる。速さの差が出るのは大きな配列を何度も作り直す処理だけで、そういうプロジェクトは自分の設定で on にできる
-- test file の対象に `test-utils/`・`tests/` の下を足した (oxlint・ESLint とも)
-- test file では oxlint の `max-lines-per-function` を off にし、ESLint の `@ycookiey/max-test-case-lines` で `it` / `test` に渡す関数だけを制限する。test file では `max-lines` を off にしているのに、`max-lines-per-function` が `describe` の長さを制限していた
-- test file では oxlint の `max-nested-callbacks` を 4 にした (`describe` 2 段、`it`、その中の関数 1 段)。3 では `describe` の入れ子と、`it` の中で関数を渡すこと (`expect(() => …)` など) が両立しなかった
