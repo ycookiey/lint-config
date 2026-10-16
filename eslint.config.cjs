@@ -1,6 +1,5 @@
 const baseConfig = require("./eslint/index.cjs");
 
-// oxlint-disable unicorn/no-array-callback-reference
 const withProjectService = (cfg) => ({
   ...cfg,
   languageOptions: {
@@ -15,5 +14,5 @@ const withProjectService = (cfg) => ({
 
 module.exports = [
   { ignores: ["node_modules/**", "oxlint/**"] },
-  ...baseConfig.map(withProjectService),
+  ...baseConfig.map((cfg) => withProjectService(cfg)),
 ];

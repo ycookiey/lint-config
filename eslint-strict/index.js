@@ -3,22 +3,11 @@ import tsPlugin from "@typescript-eslint/eslint-plugin";
 
 import base from "../eslint/index.cjs";
 
-// Strict 版 (v1.1.0 以降の opt-in): base に加えて型情報要求の rule を有効化。
-// parserOptions.projectService (または project) の設定が別途必要。
-// v3.0.0: ES module にした (@eslint-react/eslint-plugin が ES module のみのため)。
-// 型情報を使う次の rule を足した。
-// - naming-convention: boolean の変数に is/should/has/can/did/will を求める
-// - switch-exhaustiveness-check: union の switch は網羅を型で確かめ、
-//   union でない switch には default を求める (oxlint の default-case の代わり。
-//   union の switch に default を足すと、union に値が増えたときに型で気づけない)
-// - no-floating-promises: await も catch もしない Promise を禁止
-//   (oxlint の同名 rule は --type-aware なしでは動かないので、こちらで見る)
-// - promise-function-async: Promise を返す関数は async にし、失敗を必ず reject で
-//   返す (oxlint の require-await の代わり。require-await は async を外させ、
-//   同期の例外を許す向きに働く)
-// - @eslint-react/no-leaked-conditional-rendering: `&&` の左側が数などで
-//   画面に漏れうる条件付き表示を禁止
-// oxlint-disable-next-line import/no-default-export
+// Strict config: the base config plus rules that need type information.
+// The project sets parserOptions.projectService (or project).
+// This file is an ES module because @eslint-react/eslint-plugin is published
+// as an ES module only.
+// oxlint-disable-next-line import/no-default-export -- ESLint reads a flat config from the default export
 export default [
   ...base,
   {
@@ -48,11 +37,16 @@ export default [
         },
         { selector: "enumMember", format: ["UPPER_CASE"] },
       ],
+      // Replaces oxlint's default-case: a `default` in a switch over a union
+      // would hide a member added to the union later.
       "@typescript-eslint/switch-exhaustiveness-check": [
         "error",
         { requireDefaultForNonUnion: true },
       ],
+      // oxlint's rule of the same name runs only with --type-aware.
       "@typescript-eslint/no-floating-promises": "error",
+      // Replaces oxlint's require-await, which has a function that returns a
+      // Promise drop `async`, after which it can throw instead of rejecting.
       "@typescript-eslint/promise-function-async": "error",
       "@eslint-react/no-leaked-conditional-rendering": "error",
     },
