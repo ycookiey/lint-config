@@ -1,6 +1,5 @@
 const baseConfig = require("./eslint/index.cjs");
 
-// oxlint-disable no-map-spread
 // oxlint-disable unicorn/no-array-callback-reference
 const withProjectService = (cfg) => ({
   ...cfg,

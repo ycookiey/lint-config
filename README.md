@@ -88,6 +88,7 @@ export default [
 - Strict 版に `@eslint-react/no-leaked-conditional-rendering` を足した (`eslint-plugin-react` が ESLint 10 に対応せず外れた `react/jsx-no-leaked-render` の代わり)
 - oxlint で、eslint:recommended などの推奨設定にあった次の rule を有効にした: `no-array-constructor`・`no-case-declarations`・`no-empty`・`no-fallthrough`・`no-inner-declarations`・`no-prototype-builtins`・`no-regex-spaces`・`prefer-rest-params`・`typescript/no-empty-object-type`・`typescript/no-namespace`・`typescript/no-require-imports` (`*.cjs` では off)・`typescript/no-unsafe-function-type`・`react/display-name`・`react/jsx-no-target-blank`・`react/no-unescaped-entities`・`react/no-unknown-property`
 - oxlint の `react/memo-dependencies`・`react/exhaustive-effect-dependencies` を off にした。ESLint の `react-hooks/exhaustive-deps` と同じものを見て、二重に指摘していた
+- oxlint の `oxc/no-map-spread` を off にした。この rule は `map` の中で `...` を使って項目を足す書き方を指摘し、元の object を書き換える直し方 (`Object.assign`・`push`) を勧める。元を書き換えない書き方 (React の state など) とぶつかる。速さの差が出るのは大きな配列を何度も作り直す処理だけで、そういうプロジェクトは自分の設定で on にできる
 - test file の対象に `test-utils/`・`tests/` の下を足した (oxlint・ESLint とも)
 - test file では oxlint の `max-lines-per-function` を off にし、ESLint の `@ycookiey/max-test-case-lines` で `it` / `test` に渡す関数だけを制限する。test file では `max-lines` を off にしているのに、`max-lines-per-function` が `describe` の長さを制限していた
 - test file では oxlint の `max-nested-callbacks` を 4 にした (`describe` 2 段、`it`、その中の関数 1 段)。3 では `describe` の入れ子と、`it` の中で関数を渡すこと (`expect(() => …)` など) が両立しなかった
