@@ -1,0 +1,34 @@
+# Publishes to npm when a tag vX.Y.Z is pushed, using trusted publishing:
+# npm authenticates this workflow through OIDC, so no token or OTP is used.
+# The package's settings on npmjs.com register this repository and this
+# workflow file (publish.yml) as its trusted publisher.
+name: publish
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      # Same npm as the one that wrote package-lock.json: npm versions treat
+      # peer dependencies differently, so a newer npm can reject the lock in
+      # npm ci. Node 24.11.0 ships npm 11.6.1, which meets trusted publishing's
+      # requirement of npm 11.5.1 or later.
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24.11.0
+          registry-url: https://registry.npmjs.org
+      - run: npm -v
+      - name: Check that the tag matches the package version
+        run: test "v$(node -p 'require("./package.json").version')" = "$GITHUB_REF_NAME"
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+      - run: npm publish
