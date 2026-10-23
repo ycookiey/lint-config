@@ -5,10 +5,10 @@
 ## Install
 
 ```sh
-npm i -D @ycookiey/lint-config oxlint eslint typescript
+npm i -D @ycookiey/lint-config oxlint eslint typescript@6
 ```
 
-Requires oxlint 1.85 or later, ESLint 10 or later, and Node.js 22.13 or later.
+Requires oxlint 1.85 or later, ESLint 10 or later, TypeScript 5 or 6.0, and Node.js 22.13 or later. TypeScript 7 does not work, as typescript-eslint, which the ESLint config uses, does not support it.
 
 ## oxlint
 
@@ -26,7 +26,7 @@ oxlint's `extends` does not carry over the `ignorePatterns` of the extended conf
 
 ### Next.js
 
-Also extend the Next.js config:
+Add the Next.js config to `extends`:
 
 ```json
 {
@@ -49,7 +49,7 @@ export default [
 ];
 ```
 
-In test files (`*.test.*`, `*.spec.*`, and files under `__tests__/`, `test-utils/` and `tests/`), the function passed to `it` / `test` is limited to 80 lines, not counting blank lines and comment-only lines (`@ycookiey/max-test-case-lines`). The length of a `describe` is not limited.
+In test files (`.ts`, `.tsx`, `.js` and `.jsx` files named `*.test.*` or `*.spec.*`, or under `__tests__/`, `test-utils/` or `tests/`), the function passed to `it` / `test` is limited to 80 lines, not counting blank lines and comment-only lines (`@ycookiey/max-test-case-lines`). The length of a `describe` is not limited.
 
 ### Strict config (opt-in)
 
@@ -76,3 +76,7 @@ Rules it adds:
 | `@typescript-eslint/no-floating-promises` | every Promise is awaited or has its rejection handled |
 | `@typescript-eslint/promise-function-async` | a function that returns a Promise is `async`, so it always reports failure as a rejection |
 | `@eslint-react/no-leaked-conditional-rendering` | the left side of `&&` in JSX cannot render a stray value such as `0` (judged from types; booleans are not reported) |
+
+## License
+
+[MIT](LICENSE)
