@@ -1,7 +1,7 @@
 {
   "name": "@ycookiey/lint-config",
   "version": "3.0.0",
-  "description": "Shared lint config for TypeScript and React: oxlint as the main linter, ESLint for the rest. For Next.js, also extend ./oxlint/next.",
+  "description": "Shared lint config for TypeScript and React: oxlint as the main linter, ESLint for the rules oxlint does not have",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -12,11 +12,11 @@
     "oxlint-config",
     "eslint",
     "eslint-config",
+    "eslintconfig",
     "config",
     "react",
     "nextjs",
-    "typescript",
-    "ycookiey"
+    "typescript"
   ],
   "type": "module",
   "exports": {
@@ -51,7 +51,7 @@
   "peerDependencies": {
     "eslint": ">=10",
     "oxlint": ">=1.85.0",
-    "typescript": ">=5"
+    "typescript": ">=5 <6.1.0"
   },
   "dependencies": {
     "@eslint-react/eslint-plugin": "5.23.3",
